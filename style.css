@@ -1,0 +1,255 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Background */
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container */
+.container {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Card Styling */
+.card {
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    padding: 20px;
+}
+
+.card-header h1 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-body label {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.card-input {
+    display: flex;
+    gap: 10px;
+}
+
+.card-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #333;
+    color: #ffffff;
+    font-size: 16px;
+    outline: none;
+}
+
+.card-input input:focus {
+    border-color: #666;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.card-input button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.card-input button:hover {
+    background-color: #666;
+}
+
+/* Results List Styling */
+#doc-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.doc {
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.doc-thumbnail {
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.doc-content {
+    flex: 1;
+}
+
+.doc-header h2 {
+    font-size: 20px;
+    color: #ffffff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+}
+
+.doc-body p {
+    font-size: 14px;
+    color: #cccccc;
+    margin-bottom: 10px;
+}
+
+.doc-footer a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    background-color: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.doc-footer a:hover {
+    background-color: #666;
+}
+
+/* Sort Controls */
+.sort-controls {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-controls label {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.sort-controls select {
+    padding: 5px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #333;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+}
+
+.sort-controls select:focus {
+    border-color: #666;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #666;
+}
+
+.pagination button:disabled {
+    background-color: #333;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-input {
+        flex-direction: column;
+    }
+
+    .card-input button {
+        width: 100%;
+    }
+
+    .doc {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .doc-thumbnail {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-header h1 {
+        font-size: 20px;
+    }
+
+    .card-input input {
+        font-size: 14px;
+    }
+
+    .card-input button {
+        font-size: 14px;
+    }
+
+    .doc-header h2 {
+        font-size: 18px;
+    }
+
+    .doc-body p {
+        font-size: 12px;
+    }
+
+    .doc-footer a {
+        font-size: 12px;
+    }
+}

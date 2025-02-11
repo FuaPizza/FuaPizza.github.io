@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Knowunity Search</h1>
+            </div>
+            <div class="card-body">
+                <label for="know-search">Cerca:</label>
+                <div class="card-input">
+                    <input type="text" name="know-search" id="know-search">
+                    <button id="know-button">Cerca</button>
+                </div>
+                <div class="sort-controls">
+                    <label for="max-results">Mostra:</label>
+                    <select id="max-results">
+                        <option value="10">10 risultati</option>
+                        <option value="20">20 risultati</option>
+                        <option value="50">50 risultati</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="doc-list"></div>
+    </div>
+
+
+    <script>
+        const button = document.getElementById('know-button');
+        const docList = document.getElementById('doc-list');
+        const maxResultsSelect = document.getElementById('max-results');
+        const pageInfo = document.getElementById('page-info');
+
+        let currentQuery = '';
+        let maxResults = 10;
+
+        button.addEventListener('click', async () => {
+            currentQuery = document.getElementById('know-search').value;
+            await fetchResults();
+        });
+
+        maxResultsSelect.addEventListener('change', async () => {
+            maxResults = parseInt(maxResultsSelect.value);
+        });
+
+        async function fetchResults() {
+            deleteResults();
+
+            try {
+                const search = await searchQuery(currentQuery, maxResults);
+
+                for (let result of search.results) {
+                    await displayResult(result);
+                }
+            } catch (error) {
+                console.error("Error fetching search results:", error);
+            }
+        }
+
+        async function searchQuery(query, limit) {
+            const url = `https://apiedge-eu-central-1.knowunity.com/search/knows?query=${query}&contentType=KNOW&limit=${limit}&contentLanguageCode=it`;
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            return {
+                results: data.content,
+                totalResults: data.totalResults || 0,
+            };
+        }
+
+        async function displayResult(result) {
+            const doc = document.createElement('div');
+            const contentUrl = await fetchContentUrl(result.know.uuid);
+
+            doc.classList.add('doc');
+            doc.innerHTML = `
+                <div class="doc-content">
+                    <div class="doc-header">
+                        <h2>${result.know.title}</h2>
+                    </div>
+                    <div class="doc-body">
+                        <p>${result.know.description}</p>
+                    </div>
+                    <div class="doc-footer">
+                        <a href="${contentUrl}" target="_blank">Apri</a>
+                    </div>
+                </div>
+                <img class="doc-thumbnail" src="${result.know.thumbnailLargeUrl}" />
+            `;
+            docList.appendChild(doc);
+        }
+
+        async function fetchContentUrl(uuid) {
+            const pattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+            const match = pattern.exec(uuid);
+
+            if (match) {
+                const url = `https://apiedge-eu-central-1.knowunity.com/knows/${match[0]}`;
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.documents?.[0]?.contentUrl || null;
+            } else {
+                console.log("Invalid Link");
+                return null;
+            }
+        }
+
+        function deleteResults() {
+            while (docList.firstChild) {
+                docList.removeChild(docList.firstChild);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
