@@ -1,133 +1,273 @@
 <!DOCTYPE html>
 <html lang="it">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>Marmorandum</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="preconnect"
+            href="https://fonts.googleapis.com"
+        />
+        <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossorigin
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <h1>Knowunity Search</h1>
-            </div>
-            <div class="card-body">
-                <label for="know-search">Cerca:</label>
-                <div class="card-input">
-                    <input type="text" name="know-search" id="know-search">
-                    <button id="know-button">Cerca</button>
-                </div>
-                <div class="sort-controls">
-                    <label for="max-results">Mostra:</label>
-                    <select id="max-results">
-                        <option value="10">10 risultati</option>
-                        <option value="20">20 risultati</option>
-                        <option value="50">50 risultati</option>
-                    </select>
-                </div>
-            </div>
+    <body>
+        <div
+            class="theme-toggle"
+            role="button"
+            tabindex="0"
+            aria-label="Cambia tema"
+        >
+            <svg
+                class="sun-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="5"
+                ></circle>
+                <line
+                    x1="12"
+                    y1="1"
+                    x2="12"
+                    y2="3"
+                ></line>
+                <line
+                    x1="12"
+                    y1="21"
+                    x2="12"
+                    y2="23"
+                ></line>
+                <line
+                    x1="4.22"
+                    y1="4.22"
+                    x2="5.64"
+                    y2="5.64"
+                ></line>
+                <line
+                    x1="18.36"
+                    y1="18.36"
+                    x2="19.78"
+                    y2="19.78"
+                ></line>
+                <line
+                    x1="1"
+                    y1="12"
+                    x2="3"
+                    y2="12"
+                ></line>
+                <line
+                    x1="21"
+                    y1="12"
+                    x2="23"
+                    y2="12"
+                ></line>
+                <line
+                    x1="4.22"
+                    y1="19.78"
+                    x2="5.64"
+                    y2="18.36"
+                ></line>
+                <line
+                    x1="18.36"
+                    y1="5.64"
+                    x2="19.78"
+                    y2="4.22"
+                ></line>
+            </svg>
+            <svg
+                class="moon-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+                <path
+                    d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                ></path>
+            </svg>
         </div>
 
-        <div id="doc-list"></div>
-    </div>
-
-
-    <script>
-        const button = document.getElementById('know-button');
-        const docList = document.getElementById('doc-list');
-        const maxResultsSelect = document.getElementById('max-results');
-        const pageInfo = document.getElementById('page-info');
-
-        let currentQuery = '';
-        let maxResults = 10;
-
-        button.addEventListener('click', async () => {
-            currentQuery = document.getElementById('know-search').value;
-            await fetchResults();
-        });
-
-        maxResultsSelect.addEventListener('change', async () => {
-            maxResults = parseInt(maxResultsSelect.value);
-        });
-
-        async function fetchResults() {
-            deleteResults();
-
-            try {
-                const search = await searchQuery(currentQuery, maxResults);
-
-                for (let result of search.results) {
-                    await displayResult(result);
-                }
-            } catch (error) {
-                console.error("Error fetching search results:", error);
-            }
-        }
-
-        async function searchQuery(query, limit) {
-            const url = `https://apiedge-eu-central-1.knowunity.com/search/knows?query=${query}&contentType=KNOW&limit=${limit}&contentLanguageCode=it`;
-
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            return {
-                results: data.content,
-                totalResults: data.totalResults || 0,
-            };
-        }
-
-        async function displayResult(result) {
-            const doc = document.createElement('div');
-            const contentUrl = await fetchContentUrl(result.know.uuid);
-
-            doc.classList.add('doc');
-            doc.innerHTML = `
-                <div class="doc-content">
-                    <div class="doc-header">
-                        <h2>${result.know.title}</h2>
+        <main class="container">
+            <header class="search-header">
+                <div class="glass-card main-card">
+                    <div class="title-group">
+                        <img
+                            src="logo.png"
+                            alt="Marmorandum Logo"
+                            class="logo"
+                        />
+                        <h1>Marmorandum</h1>
                     </div>
-                    <div class="doc-body">
-                        <p>${result.know.description}</p>
-                    </div>
-                    <div class="doc-footer">
-                        <a href="${contentUrl}" target="_blank">Apri</a>
+                    <p class="subtitle">
+                        Trova rapidamente gli
+                        appunti che cerchi
+                    </p>
+
+                    <form
+                        class="search-form"
+                        role="search"
+                    >
+                        <div
+                            class="search-input-group"
+                        >
+                            <input
+                                type="text"
+                                id="know-search"
+                                name="know-search"
+                                placeholder="Cerca appunti..."
+                                aria-describedby="search-help"
+                                autocomplete="off"
+                            />
+                            <button
+                                type="submit"
+                                id="know-button"
+                                aria-label="Avvia ricerca"
+                            >
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <circle
+                                        cx="11"
+                                        cy="11"
+                                        r="8"
+                                    ></circle>
+                                    <path
+                                        d="M21 21l-4.35-4.35"
+                                    ></path>
+                                </svg>
+                                <span>Cerca</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Rimuovi controls-group da qui -->
+                </div>
+            </header>
+
+            <section
+                class="results-section"
+                aria-live="polite"
+                aria-label="Risultati della ricerca"
+            >
+                <div
+                    id="loading"
+                    class="loading hidden"
+                    role="status"
+                    aria-label="Caricamento in corso"
+                >
+                    <div class="spinner"></div>
+                    <span
+                        >Ricerca in corso...</span
+                    >
+                </div>
+
+                <!-- Nuova posizione per i controlli dei risultati -->
+                <div
+                    class="results-header hidden"
+                    id="results-header"
+                >
+                    <div
+                        id="results-info"
+                        class="results-info"
+                    ></div>
+
+                    <div class="controls-group">
+                        <div
+                            class="results-control"
+                        >
+                            <label
+                                for="max-results"
+                                >Risultati per
+                                pagina:</label
+                            >
+                            <select
+                                id="max-results"
+                                aria-label="Numero di risultati da mostrare"
+                            >
+                                <option
+                                    value="10"
+                                >
+                                    10
+                                </option>
+                                <option
+                                    value="20"
+                                >
+                                    20
+                                </option>
+                                <option
+                                    value="50"
+                                >
+                                    50
+                                </option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <img class="doc-thumbnail" src="${result.know.thumbnailLargeUrl}" />
-            `;
-            docList.appendChild(doc);
-        }
 
-        async function fetchContentUrl(uuid) {
-            const pattern = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-            const match = pattern.exec(uuid);
+                <div
+                    id="doc-list"
+                    class="results-grid"
+                ></div>
 
-            if (match) {
-                const url = `https://apiedge-eu-central-1.knowunity.com/knows/${match[0]}`;
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                return data.documents?.[0]?.contentUrl || null;
-            } else {
-                console.log("Invalid Link");
-                return null;
-            }
-        }
+                <div
+                    id="no-results"
+                    class="no-results hidden"
+                >
+                    <svg
+                        width="64"
+                        height="64"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                    >
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="8"
+                        ></circle>
+                        <path
+                            d="M21 21l-4.35-4.35"
+                        ></path>
+                    </svg>
+                    <h3>
+                        Nessun risultato trovato
+                    </h3>
+                    <p>
+                        Prova a modificare i
+                        termini di ricerca o usa
+                        parole chiave diverse.
+                    </p>
+                </div>
+            </section>
+        </main>
 
-        function deleteResults() {
-            while (docList.firstChild) {
-                docList.removeChild(docList.firstChild);
-            }
-        }
-    </script>
-
-</body>
-
+        <script src="script.js"></script>
+    </body>
 </html>
