@@ -20,10 +20,11 @@ html {
         sans-serif;
     color-scheme: dark light;
     scroll-behavior: smooth;
+    height: 100%;
 }
 
 body {
-    min-height: 100vh;
+    height: 100vh;
     line-height: 1.5;
     color: var(--text-3);
     background-color: var(--surface-1);
@@ -39,7 +40,9 @@ body {
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
+    background-repeat: no-repeat;
     transition: all 0.3s ease;
+    overflow-x: hidden;
 }
 
 /* ==========================================================================
@@ -250,10 +253,57 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Centrato verticalmente all'inizio */
     gap: var(--space-2xl);
     max-width: 1200px;
     margin: 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: justify-content 0.3s ease,
+        padding 0.3s ease;
+}
+
+/* Quando ci sono risultati, allinea in alto */
+.container.has-results {
+    justify-content: flex-start;
+    padding-top: var(--space-2xl);
+}
+
+.search-header {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Quando ci sono risultati, il search-header diventa sticky */
+.container.has-results .search-header {
+    position: sticky;
+    top: var(--space-lg);
+    z-index: var(--z-dropdown);
+    margin-bottom: var(--space-xl);
+}
+
+.results-section {
+    flex: 1;
+    width: 100%;
+    overflow-y: visible;
+    padding-bottom: var(--space-2xl);
+    /* Inizialmente nascosta */
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+/* Quando ci sono risultati, mostra la sezione risultati */
+.container.has-results .results-section {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* ==========================================================================
@@ -378,7 +428,7 @@ body {
     }
 }
 
-.card-header h1 {
+.main-card h1 {
     font-size: var(--font-size-3xl);
     font-weight: 500;
     color: var(--text-1);
@@ -759,19 +809,83 @@ body {
 }
 
 @media (max-width: 768px) {
+    body {
+        background-attachment: fixed;
+    }
+
     .container {
+        min-height: 100vh;
         padding: var(--space-lg);
+        justify-content: center; /* Su mobile centrato all'inizio */
+        overflow-y: visible;
+        padding-bottom: var(--space-lg);
+        transition: justify-content 0.3s ease,
+            padding 0.3s ease;
+    }
+
+    /* Su mobile quando ci sono risultati */
+    .container.has-results {
+        justify-content: flex-start;
+        padding-top: var(--space-lg);
+    }
+
+    .search-header {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    /* Su mobile il search-header rimane sticky ma con meno spazio */
+    .container.has-results .search-header {
+        position: sticky;
+        top: var(--space-sm);
+        z-index: var(--z-dropdown);
+        margin-bottom: var(--space-lg);
     }
 
     .main-card {
-        padding: var(--space-2xl);
+        padding: var(--space-xl);
+        max-width: 28rem;
+        background: var(--glass-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        gap: var(--space-lg);
+    }
+
+    .title-group {
+        gap: var(--space-sm);
+    }
+
+    .logo {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .main-card h1 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .subtitle {
+        font-size: var(--font-size-base);
+        margin-bottom: 0;
     }
 
     .search-input-group {
         flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .search-input-group input {
+        padding: var(--space-md);
+        font-size: var(--font-size-sm);
     }
 
     .search-input-group button {
+        padding: var(--space-md) var(--space-lg);
+        font-size: var(--font-size-sm);
         justify-content: center;
     }
 
@@ -803,18 +917,75 @@ body {
 }
 
 @media (max-width: 480px) {
+    .container {
+        min-height: 100vh;
+        padding: var(--space-md);
+        justify-content: center; /* Su mobile piccolo centrato all'inizio */
+        padding-bottom: var(--space-3xl);
+        transition: justify-content 0.3s ease,
+            padding 0.3s ease;
+    }
+
+    .container.has-results {
+        justify-content: flex-start;
+        padding-top: var(--space-md);
+    }
+
+    .search-header {
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .container.has-results .search-header {
+        position: sticky;
+        top: var(--space-xs);
+        z-index: var(--z-dropdown);
+        margin-bottom: var(--space-md);
+    }
+
+    .main-card {
+        padding: var(--space-lg);
+        max-width: 24rem;
+        gap: var(--space-md);
+    }
+
     .title-group {
         flex-direction: column;
-        gap: var(--space-sm);
+        gap: var(--space-xs);
     }
 
     .logo {
-        width: 2rem;
-        height: 2rem;
+        width: 1.75rem;
+        height: 1.75rem;
     }
 
     .logo:hover {
         transform: scale(1.05) rotate(3deg);
+    }
+
+    .main-card h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    .subtitle {
+        font-size: var(--font-size-sm);
+    }
+
+    .search-input-group {
+        gap: var(--space-xs);
+    }
+
+    .search-input-group input {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .search-input-group button {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .search-input-group button span {
+        display: none;
     }
 
     .result-card {
@@ -825,23 +996,28 @@ body {
         height: 10rem;
     }
 
-    .card-header h1 {
-        font-size: var(--font-size-2xl);
-    }
-
-    .subtitle {
-        font-size: var(--font-size-base);
-    }
-
-    .container {
-        padding: var(--space-md);
-    }
-
     .results-grid {
         gap: var(--space-md);
     }
 
     .results-header {
         padding: 0;
+    }
+
+    input[type="text"] {
+        font-size: 16px;
+    }
+}
+
+/* Fix per iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    body {
+        height: 100vh;
+        height: -webkit-fill-available;
+    }
+
+    .container {
+        height: 100vh;
+        height: -webkit-fill-available;
     }
 }
